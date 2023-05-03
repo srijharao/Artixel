@@ -8,5 +8,5 @@ import model.image.Image;
  */
 public interface IGreyScaleCommand {
 
-  Image execute(Image image, String component) throws ValidationException;
+    Image execute(Image image, String component) throws ValidationException;
 }
