@@ -4,37 +4,18 @@
 
 - This is an image manipulation and enhancement application that can perform operations over a given image.
 
-- This project is developed using the MVC architecture, with a Model, View and a Controller.
+- This project is developed using the MVC architecture, with a Model, View and a Controller. Other design patterns used are
+1. Command Design Pattern
+2. Strategy Desgin Pattern
+3. Adapter Design Pattern
+4. Visitor Design Pattern
 
-- This project has support only for ASCII PPM Image.
+- Application supports image operations on file formats (ppm, bmp, jpg, jpeg and png): 
+Load, Save, Brighten, Darken, Blur, Sharpen, Vertical Flip, Horizontal Flip, Dither, Convert to Sepia, Convert to greyscale, Split an RGB image into 3 greyscale images each for one of R,G,B channels, Combine 3 greyscale images to a single RGB image. One operation can be applied over the other in any particular order. Application uses a hashmap to store all the resultant intermediate image operations and allows user to save the desired image in their chosen location.
 
-- Current supported operations for image are - Load, Brighten, Darken, Flip image vertically and horizontally, Convert to greyscale, Split an RGB image into 3 images each for one of R,G,B channels, Combine 3 greyscale images to a single RGB image.
+- Application supports text-based scripting i.e, command line inputs, ignoring lines commented by '#', and provides a sophisticated GUI for  user to easily apply filter or color transformations on an image.
 
-- This project supports single line comments given by hash symbol(#).
-
-- Current functionality allows user to interact with the program to use above operations, using text-based scripting i.e, passing commands into the Console. The program is extendable to add a GUI interaction in the future.
-
-## Updates made with Version 2:
-
-- Added the support to load and save conventional file formats (bmp, jpg, jpeg and png) in addition to ASCII ppm files from before.
-
-- Added the support for color transformations and filters.
-
-- Supported color transformation operation are: greyscale, sepia (extendable)
-
-- Supported filters are: blur, sharpen (extendable)
-
-- Added support for command line argument input for a script file "-file script_path/script_file.txt"
-
-## Updates in Version 3:
-
-- Added support for GUI Application.
-
-- Images now can be manipulated from the GUI Application.
-
-- Text based application now has a way to get called: -text
-
-- Added Histogram support for frequency of colors Red, Green, Blue and Intensity.
+- GUI has Histogram support for frequency of colors Red, Green, Blue and Intensity.
 
 ### To run Application:
 1. GUI mode: ```java -jar IME.jar```
@@ -42,7 +23,121 @@
 3. Command line Argument Script: ```java -jar IME.jar -file script.txt```
 
 
-## Design Enhancements:
+
+## Design patterns implemented in this Project:
+1. **MVC (Model-View-Controller) Architectural Design pattern**
+2. **Strategy Design pattern**
+3. **Command Design pattern**
+4. **Adapter Design pattern**
+5. **Visitor Design pattern**
+
+
+## Overview of purposes for every class and interfaces 
+
+## Model
+
+### Interface:
+*ImageModel:* Starting point and contains all methods that commands would invoke for operations on an image - Load, Brighten, Vertical Flip, Horizontal Flip, Convert to Greyscale, RGB Split, RGB Combine, Save.
+
+### Class:
+*ImageModelImpl:* Implements ImageModel methods by,
+1. Handles the possible exceptions wrapped for logic.
+2. Delegates the business logic operation to classes further down (RgbImage).
+3. Uses a hashmap to store results and intermediate results, so that they can be saved at any time.  
+
+### Interface:
+*Color:* Contains methods that work at the color level of a pixel-Value, Intensity, Luma, brighten, Color component
+
+### AbstractClass:
+*AbstractColor:* implements getComponent and brighten methods, that can also be used for other classes with different components than rgb
+
+### Class:
+*RgbColor:* Has operations specific to rgb Color of an image. This class can be used by image formats that use rgb components. implements Value, Intensity, Luma methods and has private methods to get R, G, B component values. And, a toString() implementation.  
+
+
+### Interface:
+*Pixel:* Extends color (for relevant color-pixel operations) and has getXCoordinate(), getXCoordinate() to get the location of pixel.
+
+### Class:
+*PixelImpl:* Takes in X, Y, and color. Implements Pixel methods, and also the methods from Color (as pixel extends color) to get values of a pixel with that color at the given space.  
+
+### Interface:
+*Image:* Contains all methods that work on Image level. getPixelArray(); getImageWidth(); getImageHeight(); brighten(int value); vFlip();hFlip(); imgConvertGreyScale(); imgCombineRGB
+
+### AbstractClass:
+*AbstractImage:* Implements getImageWidth(); and getImageHeight(); of an image. Class is abstract with these two features for extendability.
+
+### Class:
+*RgbImage:* Contains constructors to create the Pixel Array of the image based on the arguments given to this class.
+Contains the actual business logic for operations on image.
+
+
+### Interface:
+*Operator:* Has a single method applyOperator(), that takes in an image and returns an image. This interface is implemented by two abstract classes, AbstractTransformStrategy and AbstractFilterStrategy.
+
+### AbstractClass:
+*AbstractTransformStrategy:* has doTransform() protected method, implements the respective strategies for filter and color transform classes.
+
+### AbstractClass:
+*AbstractFilterStrategy:* has a doFilter() protected method, implements the strategy for filter transform classes.
+
+### Classes:
+*BlurFilter:* extends AbstractFilterStrategy and passes Blur kernel to perform filter operation.
+
+*SharpenFilter:* extends AbstractFilterStrategy and passes Sharpen kernel to perform filter operation.
+
+*DitherFilter:* Implements Operator interface and implements its own strategy.
+
+*SepiaTransform:* extends AbstractTransformStrategy and passes sepia kernel to perform transform operation.
+
+*GreyScaleRedTransform:* extends AbstractTransformStrategy and passes Red kernel to perform transform operation.
+
+*GreyScaleGreenTransform:* extends AbstractTransformStrategy and passes Green kernel to perform transform operation.
+
+*GreyScaleBlueTransform:* extends AbstractTransformStrategy and passes Blue kernel to perform transform operation.
+
+*GreyScaleLumaTransform:* (default for greyscale command) extends AbstractTransformStrategy and passes luma kernel to perform transform operation.
+
+*GreyScaleIntensityTransform:* extends AbstractTransformStrategy and passes Blue kernel to perform transform operation.
+
+*GreyScaleBlueTransform:* extends AbstractTransformStrategy and overrides the doTransform() method to implement value component for greyscale transform.
+
+### Class
+Histogram : This class is added to support rbi plotting for image. The histogram refreshes to the image displayed on screen after each image manipulation action.
+
+
+### Interface:
+*IKernel:* has methods to get kernel and its dimension.
+
+### Classes:
+*KernelImpl:* implements Ikernel and its methods. Validates kernel and throws exceptions.
+
+*RgbTransformImpl:* extends KernelImpl and is used to check kernel length for rgb.
+
+## Controller
+### Interface:
+*ImageController:* Has a process method that is used by Main to run the controller.
+
+### Class:
+*ImageControllerImpl:* Implements ImageController and has the process() code to run commands from console.  
+
+### Class
+*ControllerGUIImpl:* This new class in created to support GUI view and controller interactions. This class implements the existing Controller Interface and is listening and awaits a callback command from the view and calls model to perform the desired action and enables view to display the output to user.
+
+## View
+### Interface:
+*ImageView:* has a showStatus method that takes in image and operation executed on it.
+
+### Class:
+*ImageViewImpl:* implementation of showStatus to give feedback to user after executing operations.  
+
+### Interface
+*ImageViewGUI:* This new interface is added to support View GUI operations.
+
+### Class
+*ViewGUIImpl:* Is an implementation of the GUI view and is responsible for displaying a user interface for the image processing and manipulation application. This provides user with the option to enter commands. ControllerGUIImpl will then act on these commands.
+   
+## Design Enhancements in sequential order from Version 1 to 3:
 **Enhancements made over Version 1 to 2:**
 
 1. Previously in Version 1, for converting an image to GreyScale, hard coded if-else ladder was used to call the respective component methods. Used command design pattern to make it extendable.
@@ -108,118 +203,7 @@ Justification: This allows adding support to other file patterns easily, instead
 
 
 
-## Design patterns implemented in this Project:
-1. **MVC (Model-View-Controller) Architectural Design pattern**
-2. **Strategy Design pattern**
-3. **Command Design pattern**
-4. **Adapter Design pattern**
 
 
-## Overview of purposes for every class and interfaces 
-
-## Controller
-### Interface:
-*ImageController:* Has a process method that is used by Main to run the controller.
-
-### Class:
-*ImageControllerImpl:* Implements ImageController and has the process() code to run commands from console.  
-
-### Class
-*ControllerGUIImpl:* This new class in created to support GUI view and controller interactions. This class implements the existing Controller Interface and is listening and awaits a callback command from the view and calls model to perform the desired action and enables view to display the output to user.
-
-## View
-### Interface:
-*ImageView:* has a showStatus method that takes in image and operation executed on it.
-
-### Class:
-*ImageViewImpl:* implementation of showStatus to give feedback to user after executing operations.  
-
-### Interface
-*ImageViewGUI:* This new interface is added to support View GUI operations.
-
-### Class
-*ViewGUIImpl:* Is an implementation of the GUI view and is responsible for displaying a user interface for the image processing and manipulation application. This provides user with the option to enter commands. ControllerGUIImpl will then act on these commands.
-
-
-## Model
-
-### Interface:
-*ImageModel:* Starting point and contains all methods that commands would invoke for operations on an image - Load, Brighten, Vertical Flip, Horizontal Flip, Convert to Greyscale, RGB Split, RGB Combine, Save.
-
-### Class:
-*ImageModelImpl:* Implements ImageModel methods by,
-1. Handles the possible exceptions wrapped for logic.
-2. Delegates the business logic operation to classes further down (RgbImage).
-3. Uses a hashmap to store results and intermediate results, so that they can be saved at any time.  
-
-### Interface:
-*Color:* Contains methods that work at the color level of a pixel-Value, Intensity, Luma, brighten, Color component
-
-### AbstractClass:
-*AbstractColor:* implements getComponent and brighten methods, that can also be used for other classes with different components than rgb
-
-### Class:
-*RgbColor:* Has operations specific to rgb Color of an image. This class can be used by image formats that use rgb components. implements Value, Intensity, Luma methods and has private methods to get R, G, B component values. And, a toString() implementation.  
-
-
-
-### Interface:
-*Pixel:* Extends color (for relevant color-pixel operations) and has getXCoordinate(), getXCoordinate() to get the location of pixel.
-
-### Class:
-*PixelImpl:* Takes in X, Y, and color. Implements Pixel methods, and also the methods from Color (as pixel extends color) to get values of a pixel with that color at the given space.  
-
-### Interface:
-*Image:* Contains all methods that work on Image level. getPixelArray(); getImageWidth(); getImageHeight(); brighten(int value); vFlip();hFlip(); imgConvertGreyScale(); imgCombineRGB
-
-### AbstractClass:
-*AbstractImage:* Implements getImageWidth(); and getImageHeight(); of an image. Class is abstract with these two features for extendability.
-
-### Class:
-*RgbImage:* Contains constructors to create the Pixel Array of the image based on the arguments given to this class.
-Contains the actual business logic for operations on image.
-
-
-### Interface:
-*Operator:* Has a single method applyOperator(), that takes in an image and returns an image. This interface is implemented by two abstract classes, AbstractTransformStrategy and AbstractFilterStrategy.
-
-### AbstractClass:
-*AbstractTransformStrategy:* has doTransform() protected method, implements the respective strategies for filter and color transform classes.
-
-### AbstractClass:
-*AbstractFilterStrategy:* has a doFilter() protected method, implements the strategy for filter transform classes.
-
-### Classes:
-*BlurFilter:* extends AbstractFilterStrategy and passes Blur kernel to perform filter operation.
-
-*SharpenFilter:* extends AbstractFilterStrategy and passes Sharpen kernel to perform filter operation.
-
-*DitherFilter:* Implements Operator interface and implements its own strategy.
-
-*SepiaTransform:* extends AbstractTransformStrategy and passes sepia kernel to perform transform operation.
-
-*GreyScaleRedTransform:* extends AbstractTransformStrategy and passes Red kernel to perform transform operation.
-
-*GreyScaleGreenTransform:* extends AbstractTransformStrategy and passes Green kernel to perform transform operation.
-
-*GreyScaleBlueTransform:* extends AbstractTransformStrategy and passes Blue kernel to perform transform operation.
-
-*GreyScaleLumaTransform:* (default for greyscale command) extends AbstractTransformStrategy and passes luma kernel to perform transform operation.
-
-*GreyScaleIntensityTransform:* extends AbstractTransformStrategy and passes Blue kernel to perform transform operation.
-
-*GreyScaleBlueTransform:* extends AbstractTransformStrategy and overrides the doTransform() method to implement value component for greyscale transform.
-
-### Class
-Histogram : This class is added to support rbi plotting for image. The histogram refreshes to the image displayed on screen after each image manipulation action.
-
-
-### Interface:
-*IKernel:* has methods to get kernel and its dimension.
-
-### Classes:
-*KernelImpl:* implements Ikernel and its methods. Validates kernel and throws exceptions.
-
-*RgbTransformImpl:* extends KernelImpl and is used to check kernel length for rgb.
 
 </div>
