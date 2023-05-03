@@ -23,71 +23,6 @@ Load, Save, Brighten, Darken, Blur, Sharpen, Vertical Flip, Horizontal Flip, Dit
 3. Command line Argument Script: ```java -jar IME.jar -file script.txt```
 
 
-## Design Enhancements:
-**Enhancements made over Version 1 to 2:**
-
-1. Previously in Version 1, for converting an image to GreyScale, hard coded if-else ladder was used to call the respective component methods. Used command design pattern to make it extendable.
-So, as part of this, introduced Interface IGreyScaleCommand, (which has an execute method, that takes an image and component). 
-The class GreyScaleCommandImpl has hash map, mapping the component name to the respective operation. 
-Each of the GreyScale color transform operations are separated into individual classes. The responsibility of each of these classes is to pass respective transformation matrices to its super class AbstractTransformStrategy.
-
-2. To incorporate the functionality of Blur, Sharpen, Sepia, GreyScale, Dither, utilized Strategy Design pattern.
-Architected this by incorporating an Operator Interface, that has a single method applyOperator(), that takes in an image and returns an image. 
-This interface is implemented by two abstract classes, AbstractTransformStrategy and AbstractFilterStrategy
-AbstractTransformStrategy has doTransform() protected method, and 
-AbstractFilterStrategy has a doFilter() protected method, these methods implement the respective strategies for filter and color transform classes. BlurFilter and SharpenFilter extends AbstractFilterStrategy
-and SepiaTransform and GreyScale<component>Transform classes extend AbstractTransformStrategy.
-
-- DitherFilter implements Operator interface and implements its own strategy.
-
-- This is because, blur, sharpen have similar strategies ; Sepia and all GreyScale Transforms use a similar strategy; Dither uses its own strategy.
-
-- Implemented Kernel Interface, KernelImpl and RgbTransformImpl classes to facilitate us with the kernel operations.
-
-- Constant file has the respective kernels for each of the color and filter transform operations. 
-
-- Changes to ImageModelImpl, RgbImage: Moved all the operation methods from RgbImage to ImageModelImpl, this is because, RgbImage responsibility can be limited to returning PixelArray and dimensions and performing operations is responsibility of ImageModelImpl.
-
-- imgConvertGreyScale(): Now uses greyScaleCommand Map instead of the if-else ladder to invoke respective command.
-- getValue(): is moved from RgbColor to AbstractColor (this operation is independent of the number of channels)
-- Clamp() : Added this to Color and Pixel interfaces, to be utilized by AbstractFilterStrategy, AbstractTransformStrategy and DitherFilter.
-
-**Summary:**
-In Version 2, project is enhanced by incorporating Strategy Design Pattern along with MVC Design pattern. Separate classes are created for color transformations such as sepia, blur, dither, grayscale, and sharpen, which can be applied to images.
-
-**Benefits:**
-- The use of the Strategy Design Pattern allows for greater flexibility in the application of color transformations to images. By encapsulating each transformation as a separate class, adding or removing transformations can be done as needed without affecting the overall structure of the program. Additionally, this approach allows us to create new transformations that can be easily integrated into the program without modifying the existing code.
-
-- The creation of separate classes for color transformations also helps to reduce code duplication and improve maintainability. Each transformation class is responsible for implementing a specific algorithm, which reduces the complexity of the overall design and makes it easier to test and debug.
-
-**Change from Version 2 to 3:**
-
-Utility class is updated to object-oriented pattern, to now reuse existing code while supporting extendability by using the public read and write methods.
-
-
-Justification: This allows adding support to other file patterns easily, instead of the functional approach which requires new public methods.
-
-
-## Design Changes:
-**Change from Version 1 to 2:**
-   
-1. Utility is moved from the model to the controller in our program. This means that the controller will now handle input/output (IO) operations, such as reading/writing data to/from files, rather than the model.
-
-- **Justification:**
-  - To follow the Model-View-Controller (MVC) design pattern more closely. According to MVC, the model should represent the data and business logic of the program, while the view handles the user interface, and the controller acts as an intermediary between the model and the view.
-
-  - By moving the IO operations from the model to the controller, seperated model and controller, making the design more modular and maintainable. Additionally, this change makes it easier to test the model in isolation, without having to worry about IO operations.
-
-2. imgConvertGreyScale(): Now uses greyScaleCommand Map instead of the if-else ladder to invoke respective command.
-
-- **Justification:**
-  - For extendability.
-3. getValue(): is moved from RgbColor to AbstractColor
-
-- **Justification:**
-  - This operation is independent of the number of channels.
-
-
 
 ## Design patterns implemented in this Project:
 1. **MVC (Model-View-Controller) Architectural Design pattern**
@@ -201,6 +136,72 @@ Histogram : This class is added to support rbi plotting for image. The histogram
 
 ### Class
 *ViewGUIImpl:* Is an implementation of the GUI view and is responsible for displaying a user interface for the image processing and manipulation application. This provides user with the option to enter commands. ControllerGUIImpl will then act on these commands.
+   
+## Design Enhancements in sequential order from Version 1 to 3:
+**Enhancements made over Version 1 to 2:**
+
+1. Previously in Version 1, for converting an image to GreyScale, hard coded if-else ladder was used to call the respective component methods. Used command design pattern to make it extendable.
+So, as part of this, introduced Interface IGreyScaleCommand, (which has an execute method, that takes an image and component). 
+The class GreyScaleCommandImpl has hash map, mapping the component name to the respective operation. 
+Each of the GreyScale color transform operations are separated into individual classes. The responsibility of each of these classes is to pass respective transformation matrices to its super class AbstractTransformStrategy.
+
+2. To incorporate the functionality of Blur, Sharpen, Sepia, GreyScale, Dither, utilized Strategy Design pattern.
+Architected this by incorporating an Operator Interface, that has a single method applyOperator(), that takes in an image and returns an image. 
+This interface is implemented by two abstract classes, AbstractTransformStrategy and AbstractFilterStrategy
+AbstractTransformStrategy has doTransform() protected method, and 
+AbstractFilterStrategy has a doFilter() protected method, these methods implement the respective strategies for filter and color transform classes. BlurFilter and SharpenFilter extends AbstractFilterStrategy
+and SepiaTransform and GreyScale<component>Transform classes extend AbstractTransformStrategy.
+
+- DitherFilter implements Operator interface and implements its own strategy.
+
+- This is because, blur, sharpen have similar strategies ; Sepia and all GreyScale Transforms use a similar strategy; Dither uses its own strategy.
+
+- Implemented Kernel Interface, KernelImpl and RgbTransformImpl classes to facilitate us with the kernel operations.
+
+- Constant file has the respective kernels for each of the color and filter transform operations. 
+
+- Changes to ImageModelImpl, RgbImage: Moved all the operation methods from RgbImage to ImageModelImpl, this is because, RgbImage responsibility can be limited to returning PixelArray and dimensions and performing operations is responsibility of ImageModelImpl.
+
+- imgConvertGreyScale(): Now uses greyScaleCommand Map instead of the if-else ladder to invoke respective command.
+- getValue(): is moved from RgbColor to AbstractColor (this operation is independent of the number of channels)
+- Clamp() : Added this to Color and Pixel interfaces, to be utilized by AbstractFilterStrategy, AbstractTransformStrategy and DitherFilter.
+
+**Summary:**
+In Version 2, project is enhanced by incorporating Strategy Design Pattern along with MVC Design pattern. Separate classes are created for color transformations such as sepia, blur, dither, grayscale, and sharpen, which can be applied to images.
+
+**Benefits:**
+- The use of the Strategy Design Pattern allows for greater flexibility in the application of color transformations to images. By encapsulating each transformation as a separate class, adding or removing transformations can be done as needed without affecting the overall structure of the program. Additionally, this approach allows us to create new transformations that can be easily integrated into the program without modifying the existing code.
+
+- The creation of separate classes for color transformations also helps to reduce code duplication and improve maintainability. Each transformation class is responsible for implementing a specific algorithm, which reduces the complexity of the overall design and makes it easier to test and debug.
+
+**Change from Version 2 to 3:**
+
+Utility class is updated to object-oriented pattern, to now reuse existing code while supporting extendability by using the public read and write methods.
+
+
+Justification: This allows adding support to other file patterns easily, instead of the functional approach which requires new public methods.
+
+
+## Design Changes:
+**Change from Version 1 to 2:**
+   
+1. Utility is moved from the model to the controller in our program. This means that the controller will now handle input/output (IO) operations, such as reading/writing data to/from files, rather than the model.
+
+- **Justification:**
+  - To follow the Model-View-Controller (MVC) design pattern more closely. According to MVC, the model should represent the data and business logic of the program, while the view handles the user interface, and the controller acts as an intermediary between the model and the view.
+
+  - By moving the IO operations from the model to the controller, seperated model and controller, making the design more modular and maintainable. Additionally, this change makes it easier to test the model in isolation, without having to worry about IO operations.
+
+2. imgConvertGreyScale(): Now uses greyScaleCommand Map instead of the if-else ladder to invoke respective command.
+
+- **Justification:**
+  - For extendability.
+3. getValue(): is moved from RgbColor to AbstractColor
+
+- **Justification:**
+  - This operation is independent of the number of channels.
+
+
 
 
 
