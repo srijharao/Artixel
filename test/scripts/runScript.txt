@@ -1,0 +1,18 @@
+load res/mat.ppm mat
+brighten 20 mat mat-brighter
+vertical-flip mat mat-vertical
+horizontal-flip mat mat-horizontal
+greyscale value-component mat mat-greyscale-value
+greyscale red-component mat mat-greyscale-red
+rgb-split mat mat-red mat-green mat-blue
+rgb-combine mat-combine mat-red mat-green mat-blue
+sepia mat mat-sepia
+blur mat mat-blur
+dither mat mat-dither
+sharpen mat mat-sharpen
+greyscale mat mat-grey
+
+
+
+
+

@@ -1,0 +1,53 @@
+load mat.ppm mat
+brighten 50 mat mat-brighter
+save mat-brighter.ppm mat-brighter
+vertical-flip mat mat-vertical
+save mat-vertical.ppm mat-vertical
+horizontal-flip mat mat-horizontal
+save mat-horizontal.ppm mat-horizontal
+greyscale value-component mat mat-greyscale-value
+save mat-red-greyscale.ppm mat-greyscale-value
+greyscale red-component mat mat-greyscale-red
+save mat-red-greyscale.ppm mat-greyscale-red
+greyscale blue-component mat mat-greyscale-blue
+save mat-red-greyscale.ppm mat-greyscale-blue
+greyscale green-component mat mat-greyscale-green
+save mat-red-greyscale.ppm mat-greyscale-green
+greyscale intensity-component mat mat-greyscale-intensity
+save mat-red-greyscale.ppm mat-greyscale-intensity
+greyscale luma-component mat mat-greyscale-luma
+save mat-red-greyscale.ppm mat-greyscale-luma
+rgb-split mat mat-red mat-green mat-blue
+save mat-red.ppm mat-red
+save mat-green.ppm mat-green
+save mat-blue.ppm mat-blue
+brighten 50 mat-red mat-red
+save mat-red.ppm mat-red
+rgb-combine mat-combine mat-red mat-green mat-blue
+save mat-combine.ppm mat-combine
+sepia mat mat-sepia
+save mat-sepia.ppm mat-sepia
+blur mat mat-blur
+save mat-blur.ppm mat-blur
+dither mat mat-dither
+save mat-dither.ppm mat-dither
+sharpen mat mat-sharpen
+save mat-sharpen.ppm mat-sharpen
+greyscale mat mat-grey
+save mat-grey.ppm mat-grey
+save mat-dither.png mat-sharpen
+save mat-blur.jpg mat-blur
+save mat-sepia.jpeg mat-sepia
+save mat-sharpen.bmp mat-sharpen
+load mat-dither.png mat-new
+vertical-flip mat-new mat-new-vertical
+save mat-new-vertical.ppm mat-new-vertical
+load mat-sepia.jpeg mat-new
+horizontal-flip mat-new mat-new-horizontal
+save mat-new-horizontal.ppm mat-new-horizontal
+load mat-sharpen.bmp mat-new
+blur mat-new mat-new-blur
+save mat-new-blur.ppm mat-new-blur
+load mat-blur.jpg mat-new
+sharpen mat-new mat-new-sharpen
+save mat-new-sharpen.ppm mat-new-sharpen

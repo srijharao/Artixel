@@ -1,0 +1,53 @@
+load res/mat.ppm mat
+brighten 50 mat mat-brighter
+save res/mat-brighter.ppm mat-brighter
+vertical-flip mat mat-vertical
+save res/mat-vertical.ppm mat-vertical
+horizontal-flip mat mat-horizontal
+save res/mat-horizontal.ppm mat-horizontal
+greyscale value-component mat mat-greyscale-value
+save res/mat-red-greyscale.ppm mat-greyscale-value
+greyscale red-component mat mat-greyscale-red
+save res/mat-red-greyscale.ppm mat-greyscale-red
+greyscale blue-component mat mat-greyscale-blue
+save res/mat-red-greyscale.ppm mat-greyscale-blue
+greyscale green-component mat mat-greyscale-green
+save res/mat-red-greyscale.ppm mat-greyscale-green
+greyscale intensity-component mat mat-greyscale-intensity
+save res/mat-red-greyscale.ppm mat-greyscale-intensity
+greyscale luma-component mat mat-greyscale-luma
+save res/mat-red-greyscale.ppm mat-greyscale-luma
+rgb-split mat mat-red mat-green mat-blue
+save res/mat-red.ppm mat-red
+save res/mat-green.ppm mat-green
+save res/mat-blue.ppm mat-blue
+brighten 50 mat-red mat-red
+save res/mat-red.ppm mat-red
+rgb-combine mat-combine mat-red mat-green mat-blue
+save res/mat-combine.ppm mat-combine
+sepia mat mat-sepia
+save res/mat-sepia.ppm mat-sepia
+blur mat mat-blur
+save res/mat-blur.ppm mat-blur
+dither mat mat-dither
+save res/mat-dither.ppm mat-dither
+sharpen mat mat-sharpen
+save res/mat-sharpen.ppm mat-sharpen
+greyscale mat mat-grey
+save res/mat-grey.ppm mat-grey
+save res/mat-dither.png mat-sharpen
+save res/mat-blur.jpg mat-blur
+save res/mat-sepia.jpeg mat-sepia
+save res/mat-sharpen.bmp mat-sharpen
+load res/mat-dither.png mat-new
+vertical-flip mat-new mat-new-vertical
+save res/mat-new-vertical.ppm mat-new-vertical
+load res/mat-sepia.jpeg mat-new
+horizontal-flip mat-new mat-new-horizontal
+save res/mat-new-horizontal.ppm mat-new-horizontal
+load res/mat-sharpen.bmp mat-new
+blur mat-new mat-new-blur
+save res/mat-new-blur.ppm mat-new-blur
+load res/mat-blur.jpg mat-new
+sharpen mat-new mat-new-sharpen
+save res/mat-new-sharpen.ppm mat-new-sharpen
