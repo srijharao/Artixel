@@ -4,11 +4,7 @@
 
 - This is an image manipulation and enhancement application that can perform operations over a given image.
 
-- This project is developed using the MVC architecture, with a Model, View and a Controller. Other design patterns used are
-1. Command Design Pattern
-2. Strategy Desgin Pattern
-3. Adapter Design Pattern
-4. Visitor Design Pattern
+- This project is developed using the MVC architecture, with a Model, View and a Controller.
 
 - Application supports image operations on file formats (ppm, bmp, jpg, jpeg and png): 
 Load, Save, Brighten, Darken, Blur, Sharpen, Vertical Flip, Horizontal Flip, Dither, Convert to Sepia, Convert to greyscale, Split an RGB image into 3 greyscale images each for one of R,G,B channels, Combine 3 greyscale images to a single RGB image. One operation can be applied over the other in any particular order. Application uses a hashmap to store all the resultant intermediate image operations and allows user to save the desired image in their chosen location.
